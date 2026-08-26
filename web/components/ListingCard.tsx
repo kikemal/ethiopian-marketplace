@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { BadgeCheck, Heart } from 'lucide-react';
 import { Listing } from '@/types';
+import { SafeImage } from '@/components/SafeImage';
 
 export function ListingCard({
   listing,
@@ -16,7 +16,7 @@ export function ListingCard({
     listing.primary_image || listing.images?.[0],
     listing.images?.[1],
   ].filter(Boolean) as string[];
-  const primary = imgs[0] || '/placeholder-listing.svg';
+  const primary = imgs[0];
   const secondary = imgs[1];
 
   const wrap =
@@ -34,7 +34,7 @@ export function ListingCard({
             size === 'featured' ? 'aspect-[3/4]' : size === 'compact' ? 'aspect-[3/4]' : 'aspect-[4/5]'
           }`}
         >
-          <Image
+          <SafeImage
             src={primary}
             alt={listing.title}
             fill
@@ -45,7 +45,7 @@ export function ListingCard({
             }`}
           />
           {secondary && (
-            <Image
+            <SafeImage
               src={secondary}
               alt=""
               fill

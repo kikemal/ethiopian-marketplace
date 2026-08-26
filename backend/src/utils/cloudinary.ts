@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import { randomUUID } from 'crypto';
+import { toStoredMediaPath } from './mediaUrl';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -37,8 +38,8 @@ export async function uploadImageBuffer(
     }
     const filename = `${randomUUID()}.jpg`;
     fs.writeFileSync(path.join(uploadsDir, filename), buffer);
-    const base = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 4000}`;
-    return `${base}/uploads/${filename}`;
+    // Store a relative path so each environment can serve via its own BACKEND_PUBLIC_URL.
+    return toStoredMediaPath(filename);
   }
 
   return new Promise((resolve, reject) => {

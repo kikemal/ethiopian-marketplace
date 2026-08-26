@@ -5,6 +5,7 @@ import { sendError, sendSuccess } from '../utils/response';
 import { messages } from '../utils/messages';
 import { allowSend } from '../socket';
 import { conversationRoom } from '../utils/chatRooms';
+import { toPublicMediaUrl } from '../utils/mediaUrl';
 
 const MAX_CONTENT = 2000;
 
@@ -244,7 +245,9 @@ export async function sellerDashboard(req: AuthRequest, res: Response) {
       status: l.status,
       price: Number(l.price),
       view_count: l.view_count,
-      image: l.images.find((i) => i.is_primary)?.url || l.images[0]?.url || null,
+      image: toPublicMediaUrl(
+        l.images.find((i) => i.is_primary)?.url || l.images[0]?.url || null
+      ) || null,
     })),
     recent_messages: recentMessages,
     held_sales: heldSales.map((t) => ({

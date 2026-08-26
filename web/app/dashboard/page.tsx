@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { SafeImage } from '@/components/SafeImage';
 import { useRouter } from 'next/navigation';
 import { Package, MessageSquare, HandCoins } from 'lucide-react';
 import { api } from '@/lib/api';
@@ -202,9 +202,13 @@ export default function DashboardPage() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <div className="relative h-10 w-10 overflow-hidden border border-border bg-paper">
-                            {l.image && (
-                              <Image src={l.image} alt="" fill className="object-cover" sizes="40px" />
-                            )}
+                            <SafeImage
+                              src={l.image}
+                              alt=""
+                              fill
+                              className="object-cover"
+                              sizes="40px"
+                            />
                           </div>
                           <Link
                             href={`/listings/${l.id}`}

@@ -97,10 +97,16 @@ API ──optional──► Cloudinary · Chapa TEST
 
 | Use | Behavior |
 |-----|----------|
-| Listing images | Public upload (or local `uploads/` when Cloudinary is unset). |
+| Listing images | Public upload to Cloudinary when configured. Without Cloudinary, files are stored under `backend/uploads/` as **relative** `/uploads/...` paths and served from `BACKEND_PUBLIC_URL`. |
 | KYC documents | **Private** storage — Cloudinary `type: 'private'` when configured, else disk under `backend/private/kyc`. Served only through authenticated admin/KYC routes — never as public listing URLs. |
 
-On Render, Cloudinary is strongly recommended (ephemeral disk).
+**Why teammates saw blank images:** older local uploads were saved as `http://localhost:4000/uploads/...`. That only works on the machine that owns the file. The API now rewrites those URLs, and the web app resolves media via `NEXT_PUBLIC_API_URL`.
+
+On Render, **Cloudinary is required** for durable listing photos (ephemeral disk). Set `CLOUDINARY_*` on the API; never put those secrets in `web/`.
+
+Collaborators should either:
+1. Use the hosted demo (Vercel + Render), or
+2. Point `NEXT_PUBLIC_API_URL` / `BACKEND_PUBLIC_URL` at the shared Render API and configure Cloudinary — do not share a teammate’s `localhost` upload URLs.
 
 ---
 

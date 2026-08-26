@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import prisma from '../models/prisma';
+import { toPublicMediaUrl } from './mediaUrl';
 
 export function mapListing(listing: {
   id: string;
@@ -18,7 +19,8 @@ export function mapListing(listing: {
 }) {
   const images = (listing.images ?? [])
     .sort((a, b) => Number(b.is_primary) - Number(a.is_primary))
-    .map((i) => i.url);
+    .map((i) => toPublicMediaUrl(i.url))
+    .filter(Boolean);
   return {
     id: listing.id,
     seller_id: listing.seller_id,

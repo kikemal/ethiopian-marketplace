@@ -1,7 +1,6 @@
 'use client';
 
 import { FormEvent, Suspense, useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { BadgeCheck, ChevronLeft, Flag, MapPin, MessageCircle, Pencil, ShoppingBag, Tag } from 'lucide-react';
@@ -14,6 +13,8 @@ import { Spinner } from '@/components/ui/Spinner';
 import { Alert } from '@/components/ui/Alert';
 import { ListingChat } from '@/components/ListingChat';
 import { Reveal } from '@/components/Reveal';
+import { SafeImage } from '@/components/SafeImage';
+import { resolveMediaUrl } from '@/lib/media';
 
 function ListingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -113,7 +114,9 @@ function ListingDetail() {
     );
   }
 
-  const images = listing.images?.length ? listing.images : ['/placeholder-listing.svg'];
+  const images = (listing.images?.length ? listing.images : ['/placeholder-listing.svg']).map(
+    resolveMediaUrl
+  );
   const isOwn = user?.id === listing.seller_id;
   const canBuy = listing.status === 'active' && !isOwn;
   const fromInbox = Boolean(searchParams.get('with'));
@@ -137,7 +140,7 @@ function ListingDetail() {
         <div className="lg:col-span-7">
           <Reveal>
             <div className="relative aspect-[4/5] overflow-hidden bg-stone-200 sm:aspect-[5/6]">
-              <Image
+              <SafeImage
                 src={images[activeImg]}
                 alt={listing.title}
                 fill
@@ -160,7 +163,7 @@ function ListingDetail() {
                     i === activeImg ? 'border-ink' : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="80px" />
+                  <SafeImage src={src} alt="" fill className="object-cover" sizes="80px" />
                 </button>
               ))}
             </div>

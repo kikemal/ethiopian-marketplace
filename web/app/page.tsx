@@ -3,7 +3,6 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowDownRight, ArrowRight, Search } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Listing, Category } from '@/types';
@@ -13,6 +12,8 @@ import { Reveal } from '@/components/Reveal';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
 import { Alert } from '@/components/ui/Alert';
+import { SafeImage } from '@/components/SafeImage';
+import { resolveMediaUrl } from '@/lib/media';
 
 const FALLBACK_CATEGORIES = [
   'Electronics',
@@ -59,7 +60,8 @@ export default function HomePage() {
   const cats = categories.length ? categories : FALLBACK_CATEGORIES;
 
   const heroImage = useMemo(() => {
-    return heroListing?.primary_image || heroListing?.images?.[0] || null;
+    const raw = heroListing?.primary_image || heroListing?.images?.[0] || null;
+    return raw ? resolveMediaUrl(raw) : null;
   }, [heroListing]);
 
   return (
@@ -68,7 +70,7 @@ export default function HomePage() {
       <section className="relative min-h-[100svh] overflow-hidden bg-ink text-white">
         <div className="absolute inset-0">
           {heroImage ? (
-            <Image
+            <SafeImage
               src={heroImage}
               alt=""
               fill
@@ -246,7 +248,7 @@ export default function HomePage() {
         <div className="grid lg:grid-cols-2">
           <div className="relative min-h-[22rem] bg-stone-300 lg:min-h-[32rem]">
             {listings[1]?.primary_image || listings[1]?.images?.[0] ? (
-              <Image
+              <SafeImage
                 src={(listings[1].primary_image || listings[1].images[0]) as string}
                 alt=""
                 fill
